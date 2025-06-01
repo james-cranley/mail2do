@@ -177,6 +177,24 @@ so the LLM always knows the "current" date and can fill the correct date field.
 
 ---
 
+## Auto-Running
+
+You can set this to run every x minutes, e.g. on a raspberry pi.
+
+```
+nano run_mail2do.sh # edit with the path to mail2do and your conda installation
+chmod +x run_mail2do.sh # make it executable
+```
+
+Edit crontab (run `crontab -e`) to add:
+
+```
+@reboot  bash -c 'sleep 30; /home/jjc/mail2do/run_mail2do.sh >> /home/jjc/mail2do/cron.log 2>&1'
+*/5 * * * * bash /home/jjc/mail2do/run_mail2do.sh >> /home/jjc/mail2do/cron.log 2>&1
+```
+
+---
+
 ## Troubleshooting
 
 **IMAP errors:**  
