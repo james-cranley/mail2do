@@ -4,4 +4,4 @@ rm -f processed_emails.txt
 rm -f status.txt
 rm -f tasks.json
 rm -f upload_results.json
-rm -f mail2do.egg-info
+rm -rf mail2do.egg-info
