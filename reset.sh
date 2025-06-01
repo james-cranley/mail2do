@@ -5,4 +5,3 @@ rm -f status.txt
 rm -f tasks.json
 rm -f upload_results.json
 rm -f cron.log
-rm -rf mail2do.egg-info
