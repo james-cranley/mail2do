@@ -1,0 +1,9 @@
+name: mail2do
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python>=3.9
+  - pip
+  - pip:
+    - -e .
