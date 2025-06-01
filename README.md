@@ -189,8 +189,7 @@ chmod +x run_mail2do.sh # make it executable
 Edit crontab (run `crontab -e`) to add:
 
 ```
-@reboot  bash -c 'sleep 30; /home/jjc/mail2do/run_mail2do.sh >> /home/jjc/mail2do/cron.log 2>&1'
-*/5 * * * * bash /home/jjc/mail2do/run_mail2do.sh >> /home/jjc/mail2do/cron.log 2>&1
+*/2 * * * * flock -n /tmp/mail2do.lock bash /home/jjc/mail2do/run_mail2do.sh >> /home/jjc/mail2do/cron.log 2>&1
 ```
 
 ---
