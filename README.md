@@ -1,7 +1,7 @@
-# mail2do
+# ✅mail2do
 
-**mail2do** is an automated pipeline that converts actionable emails into Notion database tasks using IMAP, OpenAI, and the Notion API.  
-It is designed for users who want to triage their email inboxes and quickly capture action items as structured tasks in Notion, **with automatic deduplication and schema awareness**.
+**✅mail2do** is an automated pipeline that converts actionable emails into Notion database tasks using IMAP, OpenAI, and the Notion API.  
+It is designed for users who want to triage their email inboxes and quickly capture action items as structured tasks in Notion.
 
 ---
 
@@ -28,9 +28,9 @@ It is designed for users who want to triage their email inboxes and quickly capt
 │   ├── parse_emails.py       # LLM parser: emails + schema → tasks
 │   └── notion_upload.py      # Uploads tasks.json as new Notion pages
 ├── prompt.txt                # LLM system prompt template (auto-updated)
-├── pipeline.sh               # Example shell pipeline using CLI tools
 ├── reset.sh                  # Helper to delete temporary files
 ├── README.md                 # Project documentation
+├── run_mail2do.sh            # Runscript for pipeline (configure manually)
 └── setup.py                  # Installable package configuration
 ```
 
@@ -113,12 +113,6 @@ mail2do-upload       tasks.json         > upload_results.json
 
 ```sh
 mail2do
-```
-
-Or simply:
-
-```sh
-bash pipeline.sh
 ```
 
 ---
