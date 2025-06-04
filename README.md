@@ -1,7 +1,6 @@
 # ✅mail2do
 
-**✅mail2do** is an automated pipeline that converts actionable emails into Notion database tasks using IMAP, OpenAI, and the Notion API.  
-It is designed for users who want to triage their email inboxes and quickly capture action items as structured tasks in Notion.
+**✅mail2do** is an automated pipeline that converts actionable emails into Notion database tasks using IMAP, OpenAI, and the Notion API. At present mail2do identifies a single task per email. In guture it would be nice to let the LLM judge whether to make multiple jobs per email.
 
 ---
 
