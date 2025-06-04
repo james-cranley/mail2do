@@ -70,8 +70,6 @@ cp .env.example .env
 mail2do-configure
 ```
 
-**Never commit your `.env` to a public repo!**
-
 Example `.env.example` contents:
 
 ```dotenv
