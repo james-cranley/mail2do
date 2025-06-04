@@ -8,7 +8,7 @@ You will receive:
 
 Instructions:
 - Extract as much actionable information as possible from the email and map it to the appropriate database fields.
-- Each email will contain at least one actionable item.
+- Each email will contain at least one actionable item, if you can't find an action, summarise the email and use that as the item.
 - Use the field types as guidance for formatting your output.
 - For fields with defined choices (like select, status, or relation fields), always use an existing value from the provided list—do not invent new options.
 - For the "Project" field (a relation to another database), always attempt to assign the most appropriate existing Project from the list, even if the project name is not stated explicitly. Infer from the task name, subject, and body whenever possible. If you are uncertain, choose the project that is most likely based on context and similarity of task or email content to the project names. Only leave the Project field blank if absolutely no reasonable match can be made.
