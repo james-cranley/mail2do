@@ -34,55 +34,69 @@ def load_prompt(path: str) -> str:
     with open(path, "r", encoding="utf-8") as fh:
         return fh.read()
 
-json_pattern = re.compile(r"\{.*\}", re.DOTALL)
+# --- IMPROVED JSON extraction regex ---
+json_block = re.compile(
+    r"\[\s*{.*?}\s*]|{.*?}",      # first try array, then single object
+    re.DOTALL
+)
 
-def force_json(text: str) -> Dict[str, Any]:
+def force_json(text: str) -> dict | list:
     text = text.strip()
     if text.startswith("```"):
         text = text.strip("`").lstrip("json").strip()
-    m = json_pattern.search(text)
+    m = json_block.search(text)
     if not m:
-        raise ValueError("No JSON object detected in model reply")
+        raise ValueError("No JSON object or array detected in model reply")
     return json.loads(m.group(0))
 
 def openai_chat(client, system_prompt: str, user_prompt: str,
-                model: str, temperature: float) -> Dict[str, Any]:
+                model: str, temperature: float) -> str:
     response = client.chat.completions.create(
         model=model,
         temperature=temperature,
-        response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user",   "content": user_prompt},
         ],
     )
-    return json.loads(response.choices[0].message.content)
+    return response.choices[0].message.content
 
-def parse_email_to_task(uid: str, mail: Dict[str, str],
-                        schema_props: Dict[str, Any],
-                        ref_for_prompt: Dict[str, List[str]],
-                        sys_prompt: str, model: str, temp: float,
-                        client) -> Dict[str, Any]:
+def parse_email_to_tasks(uid: str, mail: Dict[str, str],
+                         schema_props: Dict[str, Any],
+                         ref_for_prompt: Dict[str, List[str]],
+                         sys_prompt: str, model: str, temp: float,
+                         client) -> List[Dict[str, Any]]:
     field_list = "\n".join(f"- {k} ({v['type']})" for k, v in schema_props.items())
     possible_values = ""
     if ref_for_prompt:
         possible_values = "\nHere are some existing values for some fields (use one of these if relevant):\n" + \
             "\n".join(f"- {k}: {v[:10]}" for k, v in ref_for_prompt.items())
+    # ADDED: clarify array format, no markdown
     user_msg = (
         f"Here is the target Notion database schema (field name and type):\n"
         f"{field_list}\n"
         f"{possible_values}\n\n"
-        f"Convert this email into a JSON object that fills as many of those "
+        f"Convert this email into a JSON array of objects (one per task), filling as many of those "
         f"fields as possible. Use ONLY those field names, omit any unknowns, "
-        f"and output *only* valid JSON (no markdown).\n\n"
+        f"and output *only* valid JSON (no markdown). "
+        f"Return only a single JSON array of objects. Do not wrap it in markdown.\n\n"
         f"EMAIL UID: {uid}\n"
         f"Subject: {mail['subject']}\n"
         f"Body:\n{mail['body']}"
     )
+    response_text = openai_chat(client, sys_prompt, user_msg, model, temp)
+    # Try parsing as a full JSON array or object
     try:
-        return openai_chat(client, sys_prompt, user_msg, model, temp)
+        data = json.loads(response_text)
+        if isinstance(data, list):
+            return data
+        if isinstance(data, dict):
+            return [data]
     except json.JSONDecodeError:
-        return force_json(openai_chat(client, sys_prompt, user_msg, model, temp))
+        pass
+    # Fallback: regex-based extraction
+    obj = force_json(response_text)
+    return obj if isinstance(obj, list) else [obj]
 
 def main() -> None:
     load_dotenv()
@@ -137,15 +151,15 @@ def main() -> None:
             continue  # skip already parsed
 
         try:
-            task = parse_email_to_task(uid, mail, schema_props, ref_for_prompt,
-                                       system_prompt, model, temp, client)
-            task["_mail2do_uid"] = uid
-            tasks.append(task)
+            new_tasks = parse_email_to_tasks(uid, mail, schema_props, ref_for_prompt,
+                                             system_prompt, model, temp, client)
+            for t in new_tasks:
+                t["_mail2do_uid"] = uid
+                tasks.append(t)
             new_uids.append(uid)
         except Exception as e:
             print(f"WARNING: email UID {uid} failed to parse – {e}", file=sys.stderr)
         time.sleep(0.3)   # respectful rate-limit
-
 
     print(json.dumps(tasks, indent=2, ensure_ascii=False))
 
