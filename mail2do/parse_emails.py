@@ -139,16 +139,13 @@ def main() -> None:
         try:
             task = parse_email_to_task(uid, mail, schema_props, ref_for_prompt,
                                        system_prompt, model, temp, client)
+            task["_mail2do_uid"] = uid
             tasks.append(task)
             new_uids.append(uid)
         except Exception as e:
             print(f"WARNING: email UID {uid} failed to parse – {e}", file=sys.stderr)
         time.sleep(0.3)   # respectful rate-limit
 
-    if new_uids and not args.ignore_log:
-        with open(LOG_FILE, "a", encoding="utf-8") as lf:
-            for uid in new_uids:
-                lf.write(f"{uid}\n")
 
     print(json.dumps(tasks, indent=2, ensure_ascii=False))
 
