@@ -102,7 +102,7 @@ The pipeline is modular.
 ```sh
 mail2do-fetch-emails > emails.json
 mail2do-get-schema  > schema.json
-mail2do-parse-emails emails.json schema.json > tasks.json
+mail2do-parse-emails emails.json schema.json -o tasks.json
 mail2do-upload       tasks.json         > upload_results.json
 ```
 
