@@ -110,10 +110,14 @@ def main() -> None:
         if uid in processed and not args.ignore_log:
             continue
         try:
-            tasks.extend(
-                parse_email_to_tasks(uid, mail, schema, ref,
-                                     sys_prompt, model, temp, client)
+            new_tasks = parse_email_to_tasks(
+                uid, mail, schema, ref, sys_prompt, model, temp, client
             )
+
+            for t in new_tasks:
+                t["_mail2do_uid"] = uid
+
+            tasks.extend(new_tasks)
             new_uids.append(uid)
         except Exception as e:
             print(f"WARNING: email UID {uid} failed to parse – {e}", file=sys.stderr)
