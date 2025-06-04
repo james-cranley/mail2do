@@ -147,6 +147,11 @@ def main() -> None:
 
     # *** ONLY JSON TO STDOUT ***
     print(json.dumps(results, ensure_ascii=False, indent=2))
+    with open("processed_emails.txt", "a", encoding="utf-8") as lf:
+        for task in tasks:
+            uid = task.get("_mail2do_uid")
+            if uid:
+                lf.write(f"{uid}\n")
 
 if __name__ == "__main__":
     main()
