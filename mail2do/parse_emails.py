@@ -106,6 +106,10 @@ def main() -> None:
                         help="process all emails regardless of processed_emails.txt")
     parser.add_argument("emails_json", help="path to fetch_emails.py output")
     parser.add_argument("schema_json", help="path to notion_get_schema.py output")
+    parser.add_argument(
+        "-o", "--output", default="tasks.json",
+        help="where to write the resulting task list (default: tasks.json)"
+    )
     args = parser.parse_args()
 
     api_key     = os.getenv("OPENAI_API_KEY")
@@ -161,7 +165,8 @@ def main() -> None:
             print(f"WARNING: email UID {uid} failed to parse – {e}", file=sys.stderr)
         time.sleep(0.3)   # respectful rate-limit
 
-    print(json.dumps(tasks, indent=2, ensure_ascii=False))
+    with open(args.output, "w", encoding="utf-8") as fh:
+        json.dump(tasks, fh, indent=2, ensure_ascii=False)
 
 if __name__ == "__main__":
     main()
