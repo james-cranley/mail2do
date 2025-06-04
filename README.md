@@ -37,7 +37,7 @@
 
 ## Installation & Setup (Package)
 
-### Using Conda (optional)
+### via Conda
 
 Create and activate a Conda environment with Python and the package in editable mode:
 
@@ -88,6 +88,17 @@ OPENAI_API_KEY=sk-xxxxxxx
 OPENAI_MODEL=gpt-4o
 OPENAI_TEMPERATURE=0.3
 LLM_PROMPT=prompt.txt
+```
+
+**Customise Prompt**
+
+Add some information that will aid in the LLM's ability to assign tasks.
+
+```
+About me:
+- I am James Cranley
+- I work as a cardiology registrar (doctor) in Royal Papworth Hospital @nhs.net emails are largely about Clinical.
+- I work in Sarah Teichmann's lab in the Cambridge Stem Cell Institute. @cam.ac.uk emails are largely about Research.
 ```
 
 ---
