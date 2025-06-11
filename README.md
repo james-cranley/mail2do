@@ -217,11 +217,6 @@ Edit crontab (run `crontab -e`) to add:
 
 ---
 
-## Authors & License
-
-- [James Cranley](mailto:james.cranley@doctors.org.uk), with AI-powered scripting.
-- Open source, MIT license.
+[James Cranley](mailto:james.cranley@doctors.org.uk)
 
 ---
-
-**Enjoy automated actionable email triage and seamless Notion task capture!**
